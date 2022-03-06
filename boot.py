@@ -33,11 +33,12 @@ while True:
     led.on()
     do_connect()
     checkTemp()
+    temperature = str(9/5 * temp + 32)
     # post request
     try:
-        url = 'https://joebohack.com/temperature/log/?temperature=' + str(9/5 * temp + 32)
+        url = 'https://joebohack.com/temperature/log/?temperature=' + temperature
         r = requests.post(url)
-        print(r.text + "temperature logged ~", 9/5 * temp + 32, "F")
+        print(r.text + "temperature logged ~",temperature, "F")
     except Exception as postError:
         print("Posting error:", postError)
     led.off()
