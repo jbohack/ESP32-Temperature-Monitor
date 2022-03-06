@@ -27,20 +27,25 @@ def checkTemp():
   for rom in roms:
     global temp
     temp = (ds18.read_temp(rom))    #display
-    #print(9/5 * temp + 32)
-
-while True:
-    led.on()
-    do_connect()
-    checkTemp()
-    temperature = str(9/5 * temp + 32)
-    # post request
+    
+def postRequest():
     try:
         url = 'https://joebohack.com/temperature/log/?temperature=' + temperature
         r = requests.post(url)
         print(r.text + "temperature logged ~",temperature, "F")
     except Exception as postError:
         print("Posting error:", postError)
+        print("retrying...")
+        time.sleep(5)
+        do_connect()
+        postRequest()
+    
+while True:
+    led.on()
+    do_connect()
+    checkTemp()
+    temperature = str(9/5 * temp + 32)
+    postRequest()    
     led.off()
     time.sleep(300)
 
