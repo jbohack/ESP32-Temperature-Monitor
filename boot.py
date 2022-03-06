@@ -3,7 +3,6 @@ import onewire
 import ds18x20
 import time
 import urequests as requests
-import json
 
 def do_connect():
     import network
@@ -32,11 +31,7 @@ def checkTemp():
 
 while True:
     led.on()
-    # wifi connection
-    try:
-        do_connect()
-    except Exception as wifiError:
-        print("WiFi error:", wifiError)
+    do_connect()
     checkTemp()
     # post request
     try:
