@@ -32,7 +32,7 @@ def postRequest():
     try:
         url = 'https://joebohack.com/temperature/log/?temperature=' + temperature
         r = requests.post(url)
-        print(r.text + "temperature logged ~",temperature, "F")
+        print(r.text + "temperature logged ~", temperature, "F")
     except Exception as postError:
         print("Posting error:", postError)
         print("retrying...")
