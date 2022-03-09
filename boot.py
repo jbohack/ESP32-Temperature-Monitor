@@ -22,11 +22,17 @@ ds18=ds18x20.DS18X20(ow_bus)          #create ds18x20 object
 
                   
 def checkTemp():
-  roms=ds18.scan()                #scan ds18x20
-  ds18.convert_temp()             #convert temperature
-  for rom in roms:
-    global temp
-    temp = (ds18.read_temp(rom))    #display
+    try:
+        roms=ds18.scan()                #scan ds18x20
+        ds18.convert_temp()             #convert temperature
+        for rom in roms:
+            global temp
+            temp = (ds18.read_temp(rom))    #display
+    except Exception as temperatureReadError:
+        print("Temperature reading error:", temperatureReadError)
+        print("retrying...")
+        time.sleep(5)
+        checkTemp()
     
 def postRequest():
     try:
@@ -44,6 +50,7 @@ while True:
     led.on()
     do_connect()
     checkTemp()
+    time.sleep(0.5)
     temperature = str(9/5 * temp + 32)
     postRequest()    
     led.off()
