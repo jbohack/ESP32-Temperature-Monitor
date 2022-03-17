@@ -29,23 +29,15 @@ if( $resultMax->num_rows > 0 )
      $maximumTemperature = $row['maximum'];
 }
 
-// next select maximum ID with SELECT MAX(ID) FROM temperatureDataF; & store it as a variable. afterwords SELECT * FROM temperatureDataF WHERE id = $variable;
-// Select maximum ID
-$maxID = "SELECT MAX(id) AS maxID FROM temperatureDataF";
-$resultMaxID = $conn->query($maxID);
-if( $resultMaxID->num_rows > 0 )
-{
-     $row = $resultMaxID->fetch_assoc();
-     $maximumID = $row['maxID'];
-}
-
-// Select current temperature
-$currentTemp = "SELECT * FROM temperatureDataF WHERE id = $maximumID";
+// Select current temperature, time, and id
+$currentTemp = "SELECT * FROM temperatureDataF ORDER BY id DESC LIMIT 1";
 $resultCurrentTemp = $conn->query($currentTemp);
 if( $resultCurrentTemp->num_rows > 0 )
 {
      $row = $resultCurrentTemp->fetch_assoc();
      $currentTemperature = $row['temperature'];
+     $currentTime = $row['time'];
+     $currentID = $row['id'];
 }
 
 // Select average temperature
@@ -57,15 +49,6 @@ if( $resultAverageTemp->num_rows > 0 )
      $averageTemperature = $row['averageTemp'];
 }
 
-// Select latest log time
-$curTime = "SELECT * FROM temperatureDataF WHERE id = $maximumID";
-$resultCurrentTime = $conn->query($curTime);
-if( $resultCurrentTime->num_rows > 0 )
-{
-     $row = $resultCurrentTime->fetch_assoc();
-     $currentTime = $row['time'];
-}
-
 // display to the interface
 echo "<b>Maximum temperature:</b> ".number_format((float)$maximumTemperature, 2, '.', ''); echo " F";
 echo "<br><b>Minimum temperature:</b> ".number_format((float)$minimumTemperature, 2, '.', ''); echo " F";
@@ -73,7 +56,7 @@ echo "<br><b>Average temperature:</b> ".number_format((float)$averageTemperature
 echo "<br><b>Current temperature:</b> ".number_format((float)$currentTemperature, 2, '.', ''); echo " F";
 echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
 echo "<br><b>Latest log time:</b> ".$currentTime. " UTC";
-echo "<br><b>Data size:</b> ".$maximumID. " IDs";
+echo "<br><b>Data size:</b> ".$currentID. " IDs";
 
 // close the db connection
 $conn->close();
