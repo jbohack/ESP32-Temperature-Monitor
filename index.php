@@ -1,4 +1,6 @@
-<meta http-equiv="refresh" content="5" > 
+<meta http-equiv="refresh" content="5" >
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+ 
 <?php
 include_once 'dbconnection.php';
 
