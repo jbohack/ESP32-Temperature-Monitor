@@ -1,6 +1,15 @@
-<meta http-equiv="refresh" content="5" >
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
- 
+<html>
+<head>
+     <title>Temperature Monitor</title>
+     <meta http-equiv="refresh" content="5" >
+     <meta name="keywords" content="esp32 temperature, temperature monitor php, esp32 php temperature, esp32 monitor temperature, micropython temperature monitor">
+     <meta name="description" content="ESP32 temperature monitoring site https://github.com/jbohack/ESP32-Temperature-Monitor">
+     <meta name="author" content="jbohack">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+</head>
+</html>
+
 <?php
 include_once 'dbconnection.php';
 
