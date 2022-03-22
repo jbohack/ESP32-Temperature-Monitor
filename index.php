@@ -23,21 +23,23 @@ function debug($data) {
 }
 
 // Minimum temperature log
-$minTemp = "SELECT MIN(temperature) AS minimum FROM temperatureDataF";
+$minTemp = "SELECT temperature AS temperatureMin, time AS timeMin FROM temperatureDataF ORDER BY temperature ASC LIMIT 1";
 $resultMin = $conn->query($minTemp);
 if( $resultMin->num_rows > 0 )
 {
      $row = $resultMin->fetch_assoc();
-     $minimumTemperature = $row['minimum'];
+     $minimumTemperature = $row['temperatureMin'];
+     $minimumTemperatureTime = $row['timeMin'];
 }
 
 // Maximum temperature log
-$maxTemp = "SELECT MAX(temperature) AS maximum FROM temperatureDataF";
+$maxTemp = "SELECT temperature AS temperatureMax, time AS timeMax FROM temperatureDataF ORDER BY temperature DESC LIMIT 1";
 $resultMax = $conn->query($maxTemp);
 if( $resultMax->num_rows > 0 )
 {
      $row = $resultMax->fetch_assoc();
-     $maximumTemperature = $row['maximum'];
+     $maximumTemperature = $row['temperatureMax'];
+     $maximumTemperatureTime = $row['timeMax'];
 }
 
 // Select current temperature, time, and id
@@ -106,9 +108,13 @@ if( $resultAverageTotalTemp->num_rows > 0 )
 }
 
 // display to the interface
-echo "<b>Maximum temperature:</b> ".number_format((float)$maximumTemperature, 2, '.', ''); echo " F";
-echo "<br><b>Minimum temperature:</b> ".number_format((float)$minimumTemperature, 2, '.', ''); echo " F";
-echo "<br><b>Current temperature:</b> ".number_format((float)$currentTemperature, 2, '.', ''); echo " F";
+echo "<b>Current temperature:</b> ".number_format((float)$currentTemperature, 2, '.', ''); echo " F";
+echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
+echo "<br><b>Highest temperature:</b> ".number_format((float)$maximumTemperature, 2, '.', ''); echo " F";
+echo "<br><b>Lowest temperature:</b> ".number_format((float)$minimumTemperature, 2, '.', ''); echo " F";
+echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
+echo "<br><b>Time of highest temperature:</b> ".$maximumTemperatureTime. " UTC";
+echo "<br><b>Time of lowest temperature:</b> ".$minimumTemperatureTime. " UTC";
 echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
 echo "<br><b>Hourly average:</b> ".number_format((float)$averageHourlyTemperature, 2, '.', ''); echo " F";
 echo "<br><b>Daily average:</b> ".number_format((float)$averageDailyTemperature, 2, '.', ''); echo " F";
