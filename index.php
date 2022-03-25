@@ -50,7 +50,15 @@ if( $resultCurrentTemp->num_rows > 0 )
      $row = $resultCurrentTemp->fetch_assoc();
      $currentTemperature = $row['temperature'];
      $currentTime = $row['time'];
-     $currentID = $row['id'];
+}
+
+// Select data size
+$dataSize = "SELECT COUNT(temperature) AS dataSize FROM temperatureDataF";
+$resultDataSize = $conn->query($dataSize);
+if( $resultDataSize->num_rows > 0 )
+{
+     $row = $resultDataSize->fetch_assoc();
+     $numDataSize = $row['dataSize'];
 }
 
 // Select hourly average temperature
@@ -124,7 +132,7 @@ echo "<br><b>Yearly average:</b> ".number_format((float)$averageYearlyTemperatur
 echo "<br><b>All time average:</b> ".number_format((float)$averageTotalTemperature, 2, '.', ''); echo " F";
 echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
 echo "<br><b>Latest log time:</b> ".$currentTime. " UTC";
-echo "<br><b>Data size:</b> ".$currentID. " IDs";
+echo "<br><b>Data size:</b> ".$numDataSize. " IDs";
 
 // close the db connection
 $conn->close();
