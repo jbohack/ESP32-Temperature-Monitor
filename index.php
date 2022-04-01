@@ -138,166 +138,172 @@ echo "<br><b>~~~~~~~~~~~~~~~~~~~~~~~~~~~~</b>";
 echo "<br><br><br>";
 
 // temperature line chart creation using quickchart
-require_once('QuickChart.php');
-debug("Graphing data");
+$graphData = true;
 
-// 24h graph
-$temperatureArray24H= array();
-$timeArray24H = array();
+if ($graphData === true){
+     require_once('QuickChart.php');
+     debug("Graphing data");
 
-$currentDate = date('Y-m-d');
-$secondDate24H = date('Y-m-d', strtotime("+1 day"));
+     // 24h graph
+     $temperatureArray24H= array();
+     $timeArray24H = array();
 
-$temperatureDailyQuery = "SELECT HOUR(time) AS hour, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$currentDate 00:00:00:00' AND time < '$secondDate24H 00:00:00:00' GROUP BY HOUR(time) ORDER BY CURRENT_DATE()";
-$resultTemperatureDailyQuery = $conn->query($temperatureDailyQuery);
-if( $resultTemperatureDailyQuery->num_rows > 0 )
-{
-     foreach ($resultTemperatureDailyQuery as $row) {
-          array_push($temperatureArray24H, $row["temperature"]);
-          array_push($timeArray24H, $row["hour"]);
+     $currentDate = date('Y-m-d');
+     $secondDate24H = date('Y-m-d', strtotime("+1 day"));
+
+     $temperatureDailyQuery = "SELECT HOUR(time) AS hour, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$currentDate 00:00:00:00' AND time < '$secondDate24H 00:00:00:00' GROUP BY HOUR(time) ORDER BY CURRENT_DATE()";
+     $resultTemperatureDailyQuery = $conn->query($temperatureDailyQuery);
+     if( $resultTemperatureDailyQuery->num_rows > 0 )
+     {
+          foreach ($resultTemperatureDailyQuery as $row) {
+               array_push($temperatureArray24H, $row["temperature"]);
+               array_push($timeArray24H, $row["hour"]);
+          }
      }
-}
 
-$temperatureDayJsonData = json_encode($temperatureArray24H);
-$timeDayJsonData = json_encode($timeArray24H);
+     $temperatureDayJsonData = json_encode($temperatureArray24H);
+     $timeDayJsonData = json_encode($timeArray24H);
 
-$chartDaily = new QuickChart(array(
-     'width' => 500,
-     'height' => 300,
-     'backgroundColor' => transparent,
-     'devicePixelRatio' => 2,
-   ));
-   
-   $chartDaily->setConfig("{
-     type: 'line',
-     options:
-	{
-          elements:
-               {
-                    point:
+     $chartDaily = new QuickChart(array(
+          'width' => 500,
+          'height' => 300,
+          'backgroundColor' => transparent,
+          'devicePixelRatio' => 2,
+     ));
+     
+     $chartDaily->setConfig("{
+          type: 'line',
+          options:
+          {
+               elements:
                     {
-                         radius: 0,
+                         point:
+                         {
+                              radius: 0,
+                         },
                     },
                },
-          },
 
-     data: {
-       labels: $timeDayJsonData,
-       datasets: [{
-         label: '24 Hour Temperature Graph | Fahrenheit |',
-         fill: false,
-         borderColor: '#55CDFC',
-         data: $temperatureDayJsonData
-       }]
+          data: {
+          labels: $timeDayJsonData,
+          datasets: [{
+          label: '24 Hour Temperature Graph | Fahrenheit |',
+          fill: false,
+          borderColor: '#55CDFC',
+          data: $temperatureDayJsonData
+          }]
+          }
+     }");
+     $chartURLDaily = $chartDaily->getUrl();
+
+     // 7 day graph
+     $temperatureArray7D= array();
+     $timeArray7D = array();
+
+     $firstDate7D = date('Y-m-d', strtotime("-6 days"));
+     $secondDate7D = date('Y-m-d', strtotime("+1 days"));
+
+     $temperatureWeeklyQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDate7D 00:00:00:00' AND time < '$secondDate7D 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
+     $resultTemperatureWeeklyQuery = $conn->query($temperatureWeeklyQuery);
+     if( $resultTemperatureWeeklyQuery->num_rows > 0 )
+     {
+          foreach ($resultTemperatureWeeklyQuery as $row) {
+               array_push($temperatureArray7D, $row["temperature"]);
+               array_push($timeArray7D, $row["day"]);
+          }
      }
-   }");
-$chartURLDaily = $chartDaily->getUrl();
 
-// 7 day graph
-$temperatureArray7D= array();
-$timeArray7D = array();
+     $temperatureWeekJsonData = json_encode($temperatureArray7D);
+     $timeWeekJsonData = json_encode($timeArray7D);
 
-$firstDate7D = date('Y-m-d', strtotime("-6 days"));
-$secondDate7D = date('Y-m-d', strtotime("+1 days"));
-
-$temperatureWeeklyQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDate7D 00:00:00:00' AND time < '$secondDate7D 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
-$resultTemperatureWeeklyQuery = $conn->query($temperatureWeeklyQuery);
-if( $resultTemperatureWeeklyQuery->num_rows > 0 )
-{
-     foreach ($resultTemperatureWeeklyQuery as $row) {
-          array_push($temperatureArray7D, $row["temperature"]);
-          array_push($timeArray7D, $row["day"]);
-     }
-}
-
-$temperatureWeekJsonData = json_encode($temperatureArray7D);
-$timeWeekJsonData = json_encode($timeArray7D);
-
-$chartWeekly = new QuickChart(array(
-     'width' => 500,
-     'height' => 300,
-     'backgroundColor' => transparent,
-     'devicePixelRatio' => 2,
-   ));
-   
-   $chartWeekly->setConfig("{
-     type: 'line',
-     options:
-	{
-          elements:
-               {
-                    point:
+     $chartWeekly = new QuickChart(array(
+          'width' => 500,
+          'height' => 300,
+          'backgroundColor' => transparent,
+          'devicePixelRatio' => 2,
+     ));
+     
+     $chartWeekly->setConfig("{
+          type: 'line',
+          options:
+          {
+               elements:
                     {
-                         radius: 0,
+                         point:
+                         {
+                              radius: 0,
+                         },
                     },
                },
-          },
 
-     data: {
-       labels: $timeWeekJsonData,
-       datasets: [{
-         label: '7 Day Temperature Graph | Fahrenheit |',
-         fill: false,
-         borderColor: '#F7A8B8',
-         data: $temperatureWeekJsonData
-       }]
+          data: {
+          labels: $timeWeekJsonData,
+          datasets: [{
+          label: '7 Day Temperature Graph | Fahrenheit |',
+          fill: false,
+          borderColor: '#F7A8B8',
+          data: $temperatureWeekJsonData
+          }]
+          }
+     }");
+     $chartURLWeekly = $chartWeekly->getUrl();
+
+     // 30 day graph
+     $temperatureArrayMonth= array();
+     $timeArrayMonth = array();
+
+     $firstDateMonth = date('Y-m-d', strtotime("-29 days"));
+     $secondDateMonth = date('Y-m-d', strtotime("+1 days"));
+
+     $temperatureMonthQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDateMonth 00:00:00:00' AND time < '$secondDateMonth 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
+     $resultTemperatureMonthQuery = $conn->query($temperatureMonthQuery);
+     if( $resultTemperatureMonthQuery->num_rows > 0 )
+     {
+          foreach ($resultTemperatureMonthQuery as $row) {
+               array_push($temperatureArrayMonth, $row["temperature"]);
+               array_push($timeArrayMonth, $row["day"]);
+          }
      }
-   }");
-$chartURLWeekly = $chartWeekly->getUrl();
 
-// 30 day graph
-$temperatureArrayMonth= array();
-$timeArrayMonth = array();
+     $temperatureMonthJsonData = json_encode($temperatureArrayMonth);
+     $timeMonthJsonData = json_encode($timeArrayMonth);
 
-$firstDateMonth = date('Y-m-d', strtotime("-29 days"));
-$secondDateMonth = date('Y-m-d', strtotime("+1 days"));
-
-$temperatureMonthQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDateMonth 00:00:00:00' AND time < '$secondDateMonth 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
-$resultTemperatureMonthQuery = $conn->query($temperatureMonthQuery);
-if( $resultTemperatureMonthQuery->num_rows > 0 )
-{
-     foreach ($resultTemperatureMonthQuery as $row) {
-          array_push($temperatureArrayMonth, $row["temperature"]);
-          array_push($timeArrayMonth, $row["day"]);
-     }
-}
-
-$temperatureMonthJsonData = json_encode($temperatureArrayMonth);
-$timeMonthJsonData = json_encode($timeArrayMonth);
-
-$chartMonth = new QuickChart(array(
-     'width' => 500,
-     'height' => 300,
-     'backgroundColor' => transparent,
-     'devicePixelRatio' => 2,
-   ));
-   
-   $chartMonth->setConfig("{
-     type: 'line',
-     options:
-	{
-          elements:
-               {
-                    point:
+     $chartMonth = new QuickChart(array(
+          'width' => 500,
+          'height' => 300,
+          'backgroundColor' => transparent,
+          'devicePixelRatio' => 2,
+     ));
+     
+     $chartMonth->setConfig("{
+          type: 'line',
+          options:
+          {
+               elements:
                     {
-                         radius: 0,
+                         point:
+                         {
+                              radius: 0,
+                         },
                     },
                },
-          },
 
-     data: {
-       labels: $timeMonthJsonData,
-       datasets: [{
-         label: '30 Day Temperature Graph | Fahrenheit |',
-         fill: false,
-         borderColor: '#FFFFFF',
-         data: $temperatureMonthJsonData
-       }]
-     }
-   }");
-$chartURLMonth = $chartMonth->getUrl();
-debug("Graphing finished");
-
+          data: {
+          labels: $timeMonthJsonData,
+          datasets: [{
+          label: '30 Day Temperature Graph | Fahrenheit |',
+          fill: false,
+          borderColor: '#FFFFFF',
+          data: $temperatureMonthJsonData
+          }]
+          }
+     }");
+     $chartURLMonth = $chartMonth->getUrl();
+     debug("Graphing finished");
+}
+else{
+     debug("Data graphing is disabled");
+}
 // close the db connection
 $conn->close();
 debug("DB Connection Closed.");
