@@ -148,10 +148,7 @@ if ($graphData === true){
      $temperatureArray24H= array();
      $timeArray24H = array();
 
-     $currentDate = date('Y-m-d');
-     $secondDate24H = date('Y-m-d', strtotime("+1 day"));
-
-     $temperatureDailyQuery = "SELECT HOUR(time) AS hour, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$currentDate 00:00:00:00' AND time < '$secondDate24H 00:00:00:00' GROUP BY HOUR(time) ORDER BY CURRENT_DATE()";
+     $temperatureDailyQuery = "SELECT DATE(time) AS date, HOUR(time) AS hour, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= DATE_SUB(NOW(), INTERVAL 23 HOUR) GROUP BY DATE(time), HOUR(time) ORDER BY DATE(time), HOUR(time)";
      $resultTemperatureDailyQuery = $conn->query($temperatureDailyQuery);
      if( $resultTemperatureDailyQuery->num_rows > 0 )
      {
@@ -200,10 +197,7 @@ if ($graphData === true){
      $temperatureArray7D= array();
      $timeArray7D = array();
 
-     $firstDate7D = date('Y-m-d', strtotime("-6 days"));
-     $secondDate7D = date('Y-m-d', strtotime("+1 days"));
-
-     $temperatureWeeklyQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDate7D 00:00:00:00' AND time < '$secondDate7D 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
+     $temperatureWeeklyQuery = "SELECT DATE(time) AS date, DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 DAY) GROUP BY DATE(time), DAY(time) ORDER BY DATE(time), DAY(time)";
      $resultTemperatureWeeklyQuery = $conn->query($temperatureWeeklyQuery);
      if( $resultTemperatureWeeklyQuery->num_rows > 0 )
      {
@@ -252,10 +246,7 @@ if ($graphData === true){
      $temperatureArrayMonth= array();
      $timeArrayMonth = array();
 
-     $firstDateMonth = date('Y-m-d', strtotime("-29 days"));
-     $secondDateMonth = date('Y-m-d', strtotime("+1 days"));
-
-     $temperatureMonthQuery = "SELECT DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= '$firstDateMonth 00:00:00:00' AND time < '$secondDateMonth 00:00:00:00' GROUP BY DAY(time) ORDER BY CURRENT_DATE()";
+     $temperatureMonthQuery = "SELECT DATE(time) AS date, DAY(time) AS day, AVG(temperature) AS temperature FROM temperatureDataF WHERE time >= DATE_SUB(CURRENT_DATE(), INTERVAL 29 DAY) GROUP BY DATE(time), DAY(time) ORDER BY DATE(time), DAY(time)";
      $resultTemperatureMonthQuery = $conn->query($temperatureMonthQuery);
      if( $resultTemperatureMonthQuery->num_rows > 0 )
      {
