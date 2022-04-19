@@ -62,7 +62,7 @@ if( $resultDataSize->num_rows > 0 )
 }
 
 // Select hourly average temperature
-$averageHourlyTemp = "SELECT AVG(hourlyAVG.temperature) AS hourlyAVG FROM (SELECT temperature FROM temperatureDataF ORDER BY id DESC LIMIT 12) hourlyAVG";
+$averageHourlyTemp = "SELECT AVG(temperature) AS hourlyAVG FROM temperatureDataF WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)";
 $resultAverageHourlyTemp = $conn->query($averageHourlyTemp);
 if( $resultAverageHourlyTemp->num_rows > 0 )
 {
@@ -71,7 +71,7 @@ if( $resultAverageHourlyTemp->num_rows > 0 )
 }
 
 // Select daily average temperature
-$averageDailyTemp = "SELECT AVG(dailyAVG.temperature) AS dailyAVG FROM (SELECT temperature FROM temperatureDataF ORDER BY id DESC LIMIT 288) dailyAVG";
+$averageDailyTemp = "SELECT AVG(temperature) AS dailyAVG FROM temperatureDataF WHERE time >= DATE_SUB(NOW(), INTERVAL 23 HOUR)";
 $resultAverageDailyTemp = $conn->query($averageDailyTemp);
 if( $resultAverageDailyTemp->num_rows > 0 )
 {
@@ -80,7 +80,7 @@ if( $resultAverageDailyTemp->num_rows > 0 )
 }
 
 // Select weekly average temperature
-$averageWeeklyTemp = "SELECT AVG(weeklyAVG.temperature) AS weeklyAVG FROM (SELECT temperature FROM temperatureDataF ORDER BY id DESC LIMIT 2016) weeklyAVG";
+$averageWeeklyTemp = "SELECT AVG(temperature) AS weeklyAVG FROM temperatureDataF WHERE time >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 DAY)";
 $resultAverageWeeklyTemp = $conn->query($averageWeeklyTemp);
 if( $resultAverageWeeklyTemp->num_rows > 0 )
 {
@@ -89,7 +89,7 @@ if( $resultAverageWeeklyTemp->num_rows > 0 )
 }
 
 // Select monthly average temperature
-$averageMonthlyTemp = "SELECT AVG(monthlyAVG.temperature) AS monthlyAVG FROM (SELECT temperature FROM temperatureDataF ORDER BY id DESC LIMIT 8640) monthlyAVG";
+$averageMonthlyTemp = "SELECT AVG(temperature) AS monthlyAVG FROM temperatureDataF WHERE time >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)";
 $resultAverageMonthlyTemp = $conn->query($averageMonthlyTemp);
 if( $resultAverageMonthlyTemp->num_rows > 0 )
 {
@@ -98,7 +98,7 @@ if( $resultAverageMonthlyTemp->num_rows > 0 )
 }
 
 // Select yearly average temperature
-$averageYearlyTemp = "SELECT AVG(yearlyAVG.temperature) AS yearlyAVG FROM (SELECT temperature FROM temperatureDataF ORDER BY id DESC LIMIT 105120) yearlyAVG";
+$averageYearlyTemp = "SELECT AVG(temperature) AS yearlyAVG FROM temperatureDataF WHERE time >= DATE_SUB(CURRENT_DATE(), INTERVAL 365 DAY)";
 $resultAverageYearlyTemp = $conn->query($averageYearlyTemp);
 if( $resultAverageYearlyTemp->num_rows > 0 )
 {
