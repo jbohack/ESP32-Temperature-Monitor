@@ -3,17 +3,31 @@ import onewire
 import ds18x20
 import time
 import urequests as requests
+import network
 
-def do_connect():
-    import network
-    sta_if = network.WLAN(network.STA_IF)
-    if not sta_if.isconnected():
-        print('connecting to network...')
-        sta_if.active(True)
-        sta_if.connect('username', 'password')
-        while not sta_if.isconnected():
-            pass
-    print('network configuration:\n', sta_if.ifconfig(), '\n')
+wifi_ssid = "ssid"
+wifi_password = "password"
+
+def do_connect(ssid, pwd, hard_reset=True):
+    interface = network.WLAN(network.STA_IF)
+
+    if not pwd or not ssid :
+        print('no ssid or password given')
+        interface.active(False)
+        return None
+
+    for t in range(0, 120):
+        if interface.isconnected():
+            print('network configuration:\n', interface.ifconfig(), '\n')
+            return interface
+        time.sleep_ms(200)
+
+        if t == 60 and hard_reset:
+            interface.active(True)
+            interface.connect(ssid, pwd)
+
+    print('Cant connect to ', ssid)
+    return None
     
 led = machine.Pin(13, machine.Pin.OUT)
 ow_bus = onewire.OneWire(machine.Pin(27))   #Init wire
@@ -43,17 +57,15 @@ def postRequest():
         print("Posting error:", postError)
         print("retrying...")
         time.sleep(5)
-        do_connect()
+        do_connect(wifi_ssid, wifi_password)
         postRequest()
     
 while True:
     led.on()
-    do_connect()
+    do_connect(wifi_ssid, wifi_password)
     checkTemp()
     time.sleep(0.5)
     temperature = str(9/5 * temp + 32)
     postRequest()    
     led.off()
     time.sleep(300)
-
-
