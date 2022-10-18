@@ -18,9 +18,9 @@
 
 
  **Finished look:**
- An example of the website can be viewed at https://joebohack.com/temperature
+ An example of the website can be viewed at https://lullaby.cafe/temperature/
 
- https://joebohack.com/temperature/media/temperature_monitor_video.mp4 (video)
+ https://lullaby.cafe/temperature/media/temperature_monitor_video.mp4 (video)
 
- https://joebohack.com/temperature/media/temperature_monitor.jpg (image)
+ https://lullaby.cafe/temperature/media/temperature_monitor.jpg (image)
 
