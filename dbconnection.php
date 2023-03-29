@@ -18,7 +18,10 @@ if ($conn->connect_error) {
         time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         temperature varchar(50) COLLATE utf8_unicode_ci NOT NULL,
         measurement varchar(1) COLLATE utf8_unicode_ci NOT NULL,
-        PRIMARY KEY (id))COLLATE='utf8_unicode_ci'";
+        PRIMARY KEY (id),
+        INDEX (time),
+        INDEX (temperature)
+    ) COLLATE='utf8_unicode_ci'";
     if ($conn->query($sqlStructure) === TRUE) {
         debug("Table structure created successfully");
       } else {
