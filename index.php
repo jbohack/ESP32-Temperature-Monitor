@@ -14,12 +14,8 @@
 include_once 'dbconnection.php';
 
 function debug($data) {
-    $debugOutput = $data;
-
-    if (is_array($output))
-        $output = implode(',', $debugOutput);
-
-    echo "<script>console.log('Debug: " . $debugOutput . "' );</script>";
+     $output = is_array($data) ? print_r($data, true) : $data;
+     echo "<script>console.log('Debug: " . $output . "' );</script>";
 }
 
 // Minimum temperature log
@@ -164,7 +160,7 @@ if ($graphData === true){
      $chartDaily = new QuickChart(array(
           'width' => 500,
           'height' => 300,
-          'backgroundColor' => transparent,
+          'backgroundColor' => 'transparent',
           'devicePixelRatio' => 2,
      ));
      
@@ -213,7 +209,7 @@ if ($graphData === true){
      $chartWeekly = new QuickChart(array(
           'width' => 500,
           'height' => 300,
-          'backgroundColor' => transparent,
+          'backgroundColor' => 'transparent',
           'devicePixelRatio' => 2,
      ));
      
@@ -262,7 +258,7 @@ if ($graphData === true){
      $chartMonth = new QuickChart(array(
           'width' => 500,
           'height' => 300,
-          'backgroundColor' => transparent,
+          'backgroundColor' => 'transparent',
           'devicePixelRatio' => 2,
      ));
      
